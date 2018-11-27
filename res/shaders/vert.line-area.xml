@@ -1,0 +1,25 @@
+<uniforms>
+    <item type="vec2"  name="unscale"></item>
+    <item type="vec2"  name="renderScale"></item>
+    <item type="vec3"  name="areaSize"></item>
+    <item type="float" name="DPR"></item>
+</uniforms>
+<attributes>
+    <item type="vec2" name="pins"></item>
+</attributes>
+<varyings>
+    <item type="vec2" name="vUv"></item>
+</varyings>
+<program name="lineArea">
+vec4 lineArea(){
+    vUv = uv;
+    vec4 v = vec4(position, 1.0);
+
+    if (pins.x > 0.5){
+        v.y = areaSize.y;
+    }
+    
+    vec4 position = modelViewMatrix * v;
+    return(projectionMatrix * position);
+}
+</program>

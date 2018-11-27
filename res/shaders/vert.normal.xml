@@ -1,0 +1,12 @@
+<uniforms>
+	<item type="vec2" name="navScale"></item>
+</uniforms>
+<program name="normalPos">
+	vec4 normalPos() {
+	    vec4 v = vec4(position, 1.0);
+	    vec4 position = modelViewMatrix * v;
+	    return (projectionMatrix * position);
+	}
+</program>
+
+

@@ -1,0 +1,28 @@
+<uniforms>
+	<item type="vec3"  name="fromColor"></item>
+	<item type="vec3"  name="toColor"></item>
+	<item type="float" name="fromOpacity"></item>
+	<item type="float" name="toOpacity"></item>
+	<item type="vec3"  name="areaSize"></item>
+    <item type="float" name="DPR"></item>
+    <item type="vec2"  name="navViewportSize"></item>
+    <item type="float" name="gradientRotation" default="0"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="gradient">
+vec4 gradient(){
+	
+	float sin_factor = sin(gradientRotation);
+   	float cos_factor = cos(gradientRotation);
+	vec2 coord = vec2((gl_FragCoord.x - 0.5) * (navViewportSize.x / navViewportSize.y), gl_FragCoord.y - 0.5) * mat2(cos_factor, sin_factor, -sin_factor, cos_factor);
+
+	float posY = 1.0 - coord.y / navViewportSize.y;
+	float opacity = fromOpacity + (toOpacity - fromOpacity) * posY;
+
+	vec3 mixed = mix(fromColor, toColor, posY);
+	vec4 color = vec4(mixed, opacity);
+	return(color);
+}
+</program>

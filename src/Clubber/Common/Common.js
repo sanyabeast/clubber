@@ -463,7 +463,7 @@ define([
         }
     });
 
-    return new (new $Class({ name : "Common", namespace : "Plot3"}, {
+    return new (new $Class({ name : "Common", namespace : "Clubber"}, {
         StateKeeper : StateKeeper,
         HasUUID : HasUUID,
         EventTarget : EventTarget,

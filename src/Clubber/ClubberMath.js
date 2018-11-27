@@ -1,7 +1,7 @@
 "use strict";
 define(["dollaclass"], function($Class){
 
-    var ClubberMath = new $Class({ name : "ClubberMath", namespace : "Plot3" }, {
+    var ClubberMath = new $Class({ name : "ClubberMath", namespace : "Clubber" }, {
         vec : {
             static : true,
             value : {

@@ -1,0 +1,65 @@
+<uniforms>
+	<item type="vec3"  name="textColor"></item>
+	<item type="float" name="opacity"></item>
+	<item type="float" name="opacityTreshold"></item>
+	<item type="float" name="DPR"></item>
+	<item type="float" name="fontSize"></item>
+	<item type="float" name="canvasFontWidth"></item>
+	<item type="float" name="canvasFontSize"></item>
+	<item type="float" name="sheetExpansion"></item>
+	<item type="float" name="rowSize"></item>
+	<item type="vec3" name="scale"></item>
+	<item type="vec2" name="canvasSize"></item>
+	<item type="sampler2D" name="texture"></item>
+	<item type="float" name="text[24]"></item>
+	<item type="float" name="charCode"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="planeText">	
+vec4 planeText(){
+	/*char glitch offset*/
+	float cgo = 0.0001;
+	float _opacity = 0.;
+
+	vec4 color = vec4(0., 0., 0., 0.);
+	vec2 vUvC = vec2(vUv);
+	vUvC.y = 1. - vUvC.y;
+
+	vec2 vUvAbs = vec2(vUvC.x * scale.x, vUvC.y * scale.y);
+
+	float fontScale = fontSize / canvasFontSize;
+	float fontWidth = canvasFontWidth * fontScale;
+
+	/*cli is current char index*/
+	int cli = int(floor(vUvAbs.x / fontWidth));
+	float charCode = -1.;
+
+	vec2 offset = vec2(mod(vUvAbs.x, fontWidth), mod(vUvAbs.y, fontSize));
+	offset.x /= fontScale;
+	offset.y /= fontScale;
+
+
+	if (charCode >= 0.){
+		vec2 sheetPos = vec2(canvasFontWidth * mod(charCode + cgo, rowSize) * sheetExpansion, canvasFontSize * floor((charCode + cgo) / rowSize) * sheetExpansion);
+		sheetPos.x += (offset.x);
+		sheetPos.y += (offset.y);
+
+		color = texture2D(texture, vec2(sheetPos.x / canvasSize.x, sheetPos.y / canvasSize.y));
+		_opacity = color.w * opacity;
+		_opacity *= (opacityTreshold + 1.);
+
+		if (_opacity > 1.){
+			_opacity = 1.;
+		}
+
+		color = vec4(textColor, _opacity);
+	}
+
+	
+	
+	
+	return(color);
+}
+</program>

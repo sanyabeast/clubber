@@ -1,0 +1,188 @@
+<uniforms>
+    <item type="float" name="thickness"></item>
+    <item type="vec2"  name="unscale"></item>
+    <item type="vec2"  name="renderScale"></item>
+    <item type="vec3"  name="areaSize"></item>
+    <item type="float" name="DPR"></item>
+</uniforms>
+<attributes>
+    <item type="vec3" name="nextPosition"></item>
+    <item type="vec3" name="prevPosition"></item>
+    <item type="vec3" name="description"></item>
+</attributes>
+<program name="line2DV">
+/*math*/
+
+vec3 getNormalized(vec3 vecA){
+    vec3 result = vec3(0., 0., 0.);
+
+    float x = vecA.x;
+    float y = vecA.y;
+
+    float len = (x * x) + (y * y);
+
+    if (len > 0.){
+        len = 1. / sqrt(len);
+        result.x = x * len;
+        result.y = y * len;
+    }
+
+    return(result);
+}
+
+vec3 subtract(vec3 vecA, vec3 vecB){
+    vec3 result = vec3(0., 0., 0.);
+    result.x = vecA.x - vecB.x;
+    result.y = vecA.y - vecB.y;
+    return(result);
+}
+
+vec3 getNormal(bool inverted, vec3 vecDir){
+    vec3 result = vec3(0., 0., 0.);
+    if (inverted){
+        result.x = -1.0 * vecDir.x;
+        result.y = vecDir.y;
+    } else {
+        result.x = vecDir.x;
+        result.y = -1.0 * vecDir.y;
+    }
+
+    return(result);
+}
+
+vec3 getDirection(vec3 vecA, vec3 vecB){
+    vec3 subtracted = subtract(vecA, vecB);
+    vec3 normalized = getNormalized(subtracted);
+
+    return(normalized);
+}
+
+/*line2dv*/
+vec3 getPosition(vec3 point, vec3 nextPoint, vec3 prevPoint, int description){
+    vec3 result = vec3(0., 0., 0.);
+
+    if (description == 1){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 2){
+        result.x = nextPoint.x;
+        result.y = nextPoint.y;
+    } else if (description == 3){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 4){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 5){
+        result.x = nextPoint.x;
+        result.y = nextPoint.y;
+    } else if (description == 6){
+        result.x = nextPoint.x;
+        result.y = nextPoint.y;
+    } else if (description == 7){
+        result.x = prevPoint.x;
+        result.y = prevPoint.y;
+    } else if (description == 8){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 9){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 10){
+        result.x = prevPoint.x;
+        result.y = prevPoint.y;
+    } else if (description == 11){
+        result.x = point.x;
+        result.y = point.y;
+    } else if (description == 12){
+        result.x = point.x;
+        result.y = point.y;
+    }
+
+    return(result);
+}
+
+
+vec2 getLineNormal(vec3 point, vec3 nextPoint, vec3 prevPoint, int description){
+    vec2 result = vec2(0., 0.);
+    vec3 direction = vec3(0., 0., 0.);
+    vec3 lineNormal = vec3(10., 10., 0.);
+
+    if (description == 1){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(true, direction);
+    } else if (description == 2){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(true, direction);
+    } else if (description == 3){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(false, direction);
+    } else if (description == 4){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(false, direction);
+    } else if (description == 5){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(true, direction);
+    } else if (description == 6){
+        direction = getDirection(point, nextPoint);
+        lineNormal = getNormal(false, direction);
+    } else if (description == 7){
+
+    } else if (description == 8){
+
+    } else if (description == 9){
+
+    } else if (description == 10){
+
+    } else if (description == 11){
+
+    } else if (description == 12){
+
+    }
+
+    result.x = lineNormal.x;
+    result.y = lineNormal.y;
+
+    return(result);
+}
+
+
+vec4 line2DV(){
+
+    vec3 _position = getPosition(position, nextPosition, prevPosition, int(description.x));
+    vec2 lineNormal = getLineNormal(position, nextPosition, prevPosition, int(description.x));
+    lineNormal.x = 1.0;
+    lineNormal.y = 2.0;
+
+    float _thickness = DPR * thickness;
+    lineNormal.x *= 0.000001;
+    lineNormal.y *= 0.000001;
+
+    float lineScaleX = 1.0;
+    float lineScaleY = 1.0;
+    float normalSin = lineNormal.y / lineNormal.x;
+    float length = 1.0;
+
+    if (unscale.x > 0.5){
+        lineScaleX = renderScale.x;
+    }
+
+    if (unscale.y > 0.5){
+        lineScaleY = renderScale.y;
+    }
+
+    vec3 pointPos = _position.xyz;
+
+    lineNormal.x *= lineScaleX;
+    lineNormal.y *= lineScaleY;
+
+    length = sqrt((lineNormal.x * lineNormal.x) + (lineNormal.y * lineNormal.y));
+
+    lineNormal.x = lineNormal.x / length * lineScaleX;
+    lineNormal.y = lineNormal.y / length * lineScaleY;
+
+    vec4 modeledPointPos = projectionMatrix * modelViewMatrix * (vec4(pointPos + vec3(lineNormal * _thickness / 2.0, 0.0), 1.0));
+
+    return(modeledPointPos);
+}
+</program>

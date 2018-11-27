@@ -1,0 +1,15 @@
+<uniforms>
+	<item type="vec2"   name="unscale"></item>
+	<item type="vec2"   name="renderScale"></item>
+	<item type="vec2"   name="cameraPosition" predefined=""></item>
+</uniforms>
+<program name="unscaleVec">
+	vec4 unscaleVec() {
+	    vec4 v = vec4(position, 1.0);
+	    
+	    vec4 position = modelViewMatrix * v;
+	    return(projectionMatrix * position);
+	}
+</program>
+
+

@@ -1,0 +1,42 @@
+<uniforms>
+    <item type="vec2" name="timeUniform"></item>
+    <item type="vec2" name="mouseUniform"></item>
+    <item type="vec2" name="resolutionUniform"></item>
+</uniforms>
+<program name="plotter">  
+
+
+    float plot(float x, float y, vec2 p)
+    {
+        if (distance(vec2(x, y), p) < 0.02)
+            return 1.0;
+        return 0.0;
+    }
+
+    vec4 plotter() {
+
+        vec2 p = (gl_FragCoord.xy * 2.0 - resolutionUniform) / min(resolutionUniform.x, resolutionUniform.y);
+        vec2 p2 = p;
+        
+        p2 *= 5.0;
+        p2.x -= timeUniform.x * 2.7;
+        
+        float sA = plot(p2.x, sin(p2.x + timeUniform.x), p2);
+        float sB = plot(p2.x, sin(p2.x - timeUniform.x), p2);
+        float sAB = plot(p2.x, sin(p2.x - timeUniform.x) + sin(p2.x + timeUniform.x), p2);
+
+        vec3 color;
+        if ( mod(p.y, 0.1) < 0.004 || mod(p.x, 0.1) < 0.004) {
+            color += vec3(0.0, 0.5, 0.0);
+        }
+        
+        color += vec3(sA, sB, sAB);
+
+        return(vec4(color, 1.0));
+
+    }
+</program>
+
+
+
+

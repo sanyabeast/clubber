@@ -1,0 +1,30 @@
+<uniforms>
+	<item type="vec2"   name="unscale"></item>
+	<item type="vec2"   name="renderScale"></item>
+	<item type="vec3"   name="positionOffset" default="[0, 0, 0]"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="unscaleVec">
+vec4 unscaleVec() {
+	vUv = uv;
+
+	vec3 unscaledPos = vec3(position);
+
+	unscaledPos.x += positionOffset.x;
+    unscaledPos.y += positionOffset.y;
+    unscaledPos.z += positionOffset.z;
+		    
+    if (unscale.x > 0.) unscaledPos.x *= renderScale.x;
+    if (unscale.y > 0.) unscaledPos.y *= renderScale.y;
+
+    vec4 modeledPosition = modelViewMatrix * vec4(unscaledPos, 1.);
+
+    vec4 projectedPosition = projectionMatrix * modeledPosition;
+
+    return(projectedPosition);
+}
+</program>
+
+

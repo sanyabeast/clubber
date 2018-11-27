@@ -1,0 +1,47 @@
+<uniforms>
+    <item type="float" name="thickness"></item>
+    <item type="vec2"  name="unscale"></item>
+    <item type="vec2"  name="renderScale"></item>
+    <item type="vec3"  name="areaSize"></item>
+    <item type="float" name="DPR"></item>
+</uniforms>
+<attributes>
+    <item type="vec2" name="lineNormal"></item>
+</attributes>
+<varyings>
+    <item type="vec2" name="vUv"></item>
+</varyings>
+<program name="line2D">
+vec4 line2D(){
+
+    float _thickness = DPR * thickness;
+
+    float lineScaleX = 1.0;
+    float lineScaleY = 1.0;
+    float normalSin = lineNormal.y / lineNormal.x;
+    float length = 1.0;
+
+    if (unscale.x > 0.5){
+        lineScaleX = renderScale.x;
+    }
+
+    if (unscale.y > 0.5){
+        lineScaleY = renderScale.y;
+    }
+
+    vec3 pointPos = position.xyz;
+    vec2 _lineNormal = vec2(lineNormal);
+
+    _lineNormal.x *= lineScaleX;
+    _lineNormal.y *= lineScaleY;
+
+    length = sqrt((_lineNormal.x * _lineNormal.x) + (_lineNormal.y * _lineNormal.y));
+
+    _lineNormal.x = _lineNormal.x / length * lineScaleX;
+    _lineNormal.y = _lineNormal.y / length * lineScaleY;
+
+    vec4 modeledPointPos = projectionMatrix * modelViewMatrix * (vec4(pointPos + vec3(_lineNormal * _thickness / 2.0, 0.0), 1.0));
+
+    return(modeledPointPos);
+}
+</program>

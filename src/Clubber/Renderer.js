@@ -15,14 +15,14 @@ define([
 
     var Renderer = new $Class({ 
         name : "Renderer", 
-        namespace : "Plot3",
+        namespace : "Clubber",
         extends : [
             Common.EventTarget,
             Common.Initable
         ]
     }, {
-        $constructor : function(plot3, shared){
-            this.plot3 = plot3;
+        $constructor : function(clubber, shared){
+            this.clubber = clubber;
             this.shared = shared;
 
             this.state = new Common.StateKeeper({

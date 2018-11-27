@@ -16,11 +16,11 @@ define([
 		namespace : "Clubber.PrePatcher"
 	}, {
 		
-		$constructor : function(plot3UUID){
+		$constructor : function(clubberUUID){
 			this.data = {
 				instancedGeometries : {},
 				domPatched : false,
-				plot3UUID : plot3UUID
+				clubberUUID : clubberUUID
 			};
 
 			this.$patchObject3DPrototype();

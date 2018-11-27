@@ -1,0 +1,27 @@
+<uniforms>
+	<item type="vec2"   name="renderScale"></item>
+	<item type="vec3"   name="cameraPosition" predefined=""></item>
+	<item type="vec2"   name="navAreaSize"></item>
+	<item type="float"  name="positionOffset" default="0"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="unscaleVec">
+vec4 unscaleVec() {
+	vUv = uv;
+		   	    
+	vec3 pos = vec3(position);
+
+    pos.x *= renderScale.x;
+    vec4 modeledPos = modelViewMatrix * vec4(pos , 1.);
+
+    modeledPos.y += cameraPosition.y + 256. + positionOffset;
+    modeledPos.y *= renderScale.y;
+
+
+    return(projectionMatrix * modeledPos );
+}
+</program>
+
+

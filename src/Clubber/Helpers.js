@@ -5,7 +5,7 @@ define([
 		"Clubber/Common/DataTypes"
 	], function($Class, StringTemplate, DataTypes){
 
-	var Plot3Helpers = new $Class({ name : "Plot3Helpers", namespace : "Plot3" }, {
+	var ClubberHelpers = new $Class({ name : "ClubberHelpers", namespace : "Clubber" }, {
 		DPR : {
 			static : true,
 			value : window.devicePixelRatio
@@ -597,6 +597,6 @@ define([
 
 	window.$Class = $Class;
 
-	return Plot3Helpers;
+	return ClubberHelpers;
 
 });

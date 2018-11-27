@@ -1,0 +1,23 @@
+<uniforms>
+	<item type="vec3"  name="diffuse"></item>
+	<item type="float" name="opacity"></item>
+	<item type="sampler2D" name="texture"></item>
+	<item type="vec3" name="scale"></item>
+	<item type="vec2" name="canvasSize"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="planeText">	
+vec4 planeText(){
+	vec2 vUv2 = vec2(vUv);
+
+	vUv2.x *= (scale.x / canvasSize.x);		
+	vUv2.y *= (scale.y / canvasSize.y);
+
+
+	vec4 color = texture2D(texture, vUv2);
+
+	return(color);
+}
+</program>

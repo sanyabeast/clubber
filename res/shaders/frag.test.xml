@@ -1,0 +1,10 @@
+<uniforms>
+	<item type="vec3" name="diffuse"></item>
+	<item type="float" name="opacity"></item>
+</uniforms>
+<program name="test">
+vec4 test(){
+	vec4 color = vec4(diffuse, opacity);
+	return(color);
+}
+</program>

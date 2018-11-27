@@ -1,0 +1,92 @@
+<uniforms>
+	<item type="vec3"  name="textColor"></item>
+	<item type="float" name="opacity"></item>
+	<item type="float" name="opacityTreshold"></item>
+	<item type="float" name="DPR"></item>
+	<item type="float" name="fontSize"></item>
+	<item type="float" name="canvasFontWidth"></item>
+	<item type="float" name="canvasFontSize"></item>
+	<item type="float" name="sheetExpansion"></item>
+	<item type="float" name="rowSize"></item>
+	<item type="vec3" name="scale"></item>
+	<item type="vec2" name="canvasSize"></item>
+	<item type="sampler2D" name="texture"></item>
+	<item type="float" name="text[24]"></item>
+</uniforms>
+<varyings>
+	<item type="vec2" name="vUv"></item>
+</varyings>
+<program name="planeText">	
+vec4 planeText(){
+	/*char glitch offset*/
+	float cgo = 0.000001;
+	float _opacity = 0.;
+
+	vec4 color = vec4(0., 0., 0., 0.);
+	vec2 vUvC = vec2(vUv);
+	vUvC.y = 1. - vUvC.y;
+
+	vec2 vUvAbs = vec2(vUvC.x * scale.x, vUvC.y * scale.y);
+
+	float fontScale = fontSize / canvasFontSize;
+	float fontWidth = canvasFontWidth * fontScale;
+
+	/*cli is current char index*/
+	int cli = int(vUvAbs.x / fontWidth);
+	float char = -1.;
+
+	vec2 offset = vec2(mod(vUvAbs.x, fontWidth), mod(vUvAbs.y, fontSize));
+	offset.x /= fontScale;
+	offset.y /= fontScale;
+
+	/*stupid glsl*/
+	if (cli == 0) 		char = text[0];
+	else if (cli == 1) 	char = text[1];
+	else if (cli == 2) 	char = text[2];
+	else if (cli == 3) 	char = text[3];
+	else if (cli == 4) 	char = text[4];
+	else if (cli == 5) 	char = text[5];
+	else if (cli == 6) 	char = text[6];
+	else if (cli == 7) 	char = text[7];
+	else if (cli == 8) 	char = text[8];
+	else if (cli == 9) 	char = text[9];
+	else if (cli == 10) char = text[10];
+	else if (cli == 11) char = text[11];
+	else if (cli == 12) char = text[12];
+	else if (cli == 13) char = text[13];
+	else if (cli == 14) char = text[14];
+	else if (cli == 15) char = text[15];
+	else if (cli == 16) char = text[16];
+	else if (cli == 17) char = text[17];
+	else if (cli == 18) char = text[18];
+	else if (cli == 19) char = text[19];
+	else if (cli == 20) char = text[20];
+	else if (cli == 21) char = text[21];
+	else if (cli == 22) char = text[22];
+
+
+
+
+	if (char >= 0.){
+		vec2 sheetPos = vec2((canvasFontWidth * mod(char + cgo, rowSize) * sheetExpansion) + (canvasFontWidth * sheetExpansion / 2.), canvasFontSize * floor((char + cgo) / rowSize) * sheetExpansion);
+		sheetPos.x += (offset.x);
+		sheetPos.y += (offset.y);
+
+
+		color = texture2D(texture, vec2(sheetPos.x / canvasSize.x, sheetPos.y / canvasSize.y));
+		_opacity = color.w * opacity;
+		_opacity *= (opacityTreshold + 1.);
+
+		if (_opacity > 1.){
+			_opacity = 1.;
+		}
+
+		color = vec4(textColor, _opacity);
+	}
+
+	
+	
+	
+	return(color);
+}
+</program>
